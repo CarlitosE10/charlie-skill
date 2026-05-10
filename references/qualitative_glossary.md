@@ -1,6 +1,6 @@
 # Qualitative Glossary
 
-Calibration anchors and definitions for every rating scale Charlie uses.
+Calibration anchors and definitions for every rating scale used in qualitative synthesis.
 
 ---
 
@@ -76,17 +76,17 @@ This is auto-classified from the sector. The synthesizer should accept the auto-
 
 ---
 
-## Growth signal (hint to Ray)
+## Growth signal
 
-Charlie's hint to Ray on whether to adjust Snowball's revenue/FCF growth assumptions:
+Qualitative signal on whether historical revenue/FCF growth assumptions should be adjusted:
 
 | Signal | Meaning |
 |---|---|
-| `decelerate` | Qualitative factors suggest growth is harder to sustain than the historical CAGR implies. Reduce Ray's base case growth. |
+| `decelerate` | Qualitative factors suggest growth is harder to sustain than the historical CAGR implies. |
 | `maintain` | Qualitative factors are consistent with extrapolating recent growth. |
-| `accelerate` | Qualitative tailwinds (new product, secular driver, market expansion) suggest growth could be higher than the historical CAGR. |
+| `accelerate` | Qualitative tailwinds (new product, secular driver, market expansion) suggest growth could exceed the historical CAGR. |
 
-Optional `suggested_adjustment_pct`: a numeric pp delta. Example: -1.5 means "subtract 1.5 percentage points from Snowball's base-case growth assumption."
+Optional `suggested_adjustment_pct`: a numeric pp delta. Example: -1.5 means "subtract 1.5 percentage points from the base-case growth assumption."
 
 Use this conservatively. Default to `maintain` unless there is a clear qualitative reason to deviate.
 
@@ -106,9 +106,35 @@ Use this conservatively. Default to `maintain` unless there is a clear qualitati
 
 ---
 
+## moat_score (1–5)
+
+See `moat_taxonomy.md` for the full mapping. Quick reference:
+
+| Score | Label |
+|---|---|
+| 1 | No moat |
+| 2 | Weak moat |
+| 3 | Moderate moat |
+| 4 | Strong moat |
+| 5 | Extraordinary moat |
+
+---
+
+## business_verdict
+
+Overall business quality assessment — not a stock recommendation:
+
+| Value | Meaning |
+|---|---|
+| `strong` | Durable moat, favorable sector dynamics, manageable macro risks |
+| `acceptable` | Some competitive advantages, moderate risks, warrants monitoring |
+| `weak` | Weak or no moat, difficult sector, or significant structural headwinds |
+
+---
+
 ## Calibration philosophy
 
 1. **Anchor every claim to a fact.** Reasoning fields should reference something concrete from the fact pack.
 2. **Be sparing.** A short, well-grounded report beats a long speculative one.
-3. **Don't make recommendations.** Charlie supplies texture; Ray decides.
+3. **Don't make recommendations.** Business quality assessment is the output; investment decisions are not.
 4. **Think across the cycle.** The qualitative score should reflect how the business will perform across multiple scenarios, not how it's performing right now.

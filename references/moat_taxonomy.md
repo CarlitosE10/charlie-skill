@@ -1,6 +1,6 @@
 # MOAT Taxonomy
 
-A **moat** is a structural advantage that protects a company's economic returns (excess returns above cost of capital) from competition over time. Charlie identifies which of the five canonical moat types — if any — apply, and rates the moat's overall strength and durability.
+A **moat** is a structural advantage that protects a company's economic returns (excess returns above cost of capital) from competition over time. The synthesis layer identifies which of the five canonical moat types — if any — apply, and rates the moat's overall strength and durability.
 
 This taxonomy follows Pat Dorsey / Morningstar's framework, which has become the most widely adopted model for moat analysis.
 
@@ -94,7 +94,7 @@ This taxonomy follows Pat Dorsey / Morningstar's framework, which has become the
 
 ## Quantitative anchors → MOAT strength
 
-When Charlie reads the proxies, this is the rough mapping:
+When reading the proxies, this is the rough mapping:
 
 | Proxy reading | Implication |
 |---|---|
@@ -105,6 +105,22 @@ When Charlie reads the proxies, this is the rough mapping:
 | R&D intensity > 10% AND consistent | Likely intangible-asset moat (R&D-driven) |
 | CAPEX intensity > 15% AND high market share | Likely cost-advantage or efficient-scale moat |
 | Revenue 3y CAGR > sector average | Moat is translating into above-sector growth |
+
+---
+
+## moat_score: integer 1–5
+
+Assigned alongside the qualitative `moat_strength` rating. Use the proxy table above to anchor the score:
+
+| Score | Label | Criteria |
+|---|---|---|
+| 1 | No moat | ROIC ≤ cost of capital, no identifiable structural advantage, commodity pricing |
+| 2 | Weak moat | Some advantage but narrow or eroding; ROIC > cost of capital intermittently |
+| 3 | Moderate moat | Real, identifiable moat type; ROIC consistently above cost of capital; faces meaningful competition or disruption risk |
+| 4 | Strong moat | Durable, multi-year advantage; ROIC well above cost of capital; hard to replicate |
+| 5 | Extraordinary moat | Structurally dominant; decades of runway; multiple moat types reinforcing each other (e.g., Visa: network effects + intangibles + switching costs) |
+
+Default to 3 when evidence is mixed. Reserve 1 and 5 for unambiguous cases.
 
 ---
 

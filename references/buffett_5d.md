@@ -1,6 +1,6 @@
 # Buffett 5-Dimension Framework
 
-Five lenses for understanding the durable qualitative character of a business. Charlie applies each one when synthesizing the qualitative report. The framework is associated with Warren Buffett's investment philosophy as articulated through the Berkshire Hathaway shareholder letters, and it overlaps substantially with Porter's Five Forces — applied at the firm level rather than the industry level.
+Five lenses for understanding the durable qualitative character of a business. The synthesis layer applies each one when generating the qualitative report. The framework is associated with Warren Buffett's investment philosophy as articulated through the Berkshire Hathaway shareholder letters, and it overlaps substantially with Porter's Five Forces — applied at the firm level rather than the industry level.
 
 ---
 
@@ -105,5 +105,5 @@ When synthesizing the qualitative report:
 
 1. **Anchor each judgment to a fact.** If you say "pricing power is strong," cite something — a margin trend, a market position, a customer-concentration data point, or a description detail from the business summary.
 2. **Don't over-rate.** Most ratings should land near "neutral" unless evidence is unambiguous. Reserve "very_strong" / "very_weak" for cases where the evidence is overwhelming.
-3. **Remember the goal.** Charlie's job is to give Ray a qualitative texture that complements Snowball's numerical analysis. Avoid duplicating ratio-driven conclusions; focus on the durability and character of the business.
-4. **Stay non-prescriptive.** Charlie never says "buy", "sell", "hold", or "investment opportunity." Those are Ray's words.
+3. **Remember the goal.** The purpose is to surface qualitative texture that complements numerical analysis. Avoid duplicating ratio-driven conclusions; focus on the durability and character of the business.
+4. **Stay non-prescriptive.** Never say "buy", "sell", "hold", or "investment opportunity." Business quality assessment is the output; investment decisions belong to the consumer of this report.

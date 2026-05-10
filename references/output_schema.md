@@ -1,6 +1,6 @@
-# CharlieReport — JSON Schema (v1.0.0)
+# QualReport — JSON Schema (v1.0.0)
 
-This document defines the JSON contract Charlie produces. Ray consumes this output programmatically. The schema version is `"1.0.0"` — same major version line as Snowball.
+This document defines the JSON contract produced by `run_analysis(ticker)` and by `uv run qualify.py analyze TICKER`. The schema version is `"1.0.0"`.
 
 ---
 
@@ -118,6 +118,7 @@ This document defines the JSON contract Charlie produces. Ray consumes this outp
 
 ```json
 {
+  "moat_score": 5,
   "moat_strength": "very_strong",
   "moat_types": ["intangible_assets", "switching_costs", "network_effects"],
   "moat_durability_years": 15,
@@ -136,7 +137,7 @@ This document defines the JSON contract Charlie produces. Ray consumes this outp
 }
 ```
 
-`proxies` is computed deterministically by `moat_proxies.py` (no LLM). The qualitative fields (`moat_strength`, `moat_types`, `moat_durability_years`, `moat_reasoning`) are produced by the synthesizer using the proxies as anchors.
+`proxies` is computed deterministically by `analysis.py::calc_moat_proxies()` (no LLM). The qualitative fields (`moat_strength`, `moat_types`, `moat_durability_years`, `moat_reasoning`) are produced by the synthesizer using the proxies as anchors.
 
 ### `peer_comparison`
 
@@ -193,7 +194,7 @@ Array of 0–5 qualitative risks not already captured by `geopolitical_risks`:
 
 ### `growth_adjustment`
 
-The hint to Ray:
+Qualitative signal for consuming agents — whether growth assumptions should be accelerated, maintained, or decelerated:
 
 ```json
 {
@@ -212,7 +213,32 @@ Integer 0–100, composite weighting (rough):
 - Customer dimension: 15
 - Supplier dimension: 10
 
-Higher = better qualitative business. Used by Ray as one input into conviction.
+Higher = better qualitative business.
+
+### `business_verdict`
+
+Overall quality verdict of the business itself — not a stock price recommendation:
+
+```json
+"business_verdict": "strong"
+```
+
+| Value | Meaning |
+|---|---|
+| `"strong"` | Durable moat, favorable sector, manageable macro risks |
+| `"acceptable"` | Some competitive advantages, moderate risks, requires monitoring |
+| `"weak"` | Weak or no moat, difficult sector, or significant structural headwinds |
+
+`null` if synthesis was skipped (no API key).
+
+### `moat.moat_score`
+
+Integer 1–5 summary of moat strength:
+- 1 = no moat (commodity, easily displaced)
+- 2 = weak (some advantage but not durable)
+- 3 = moderate (real advantage, but under pressure)
+- 4 = strong (durable advantage, hard to replicate)
+- 5 = extraordinary (structurally dominant, decades of runway)
 
 ### `data_quality`
 
@@ -220,9 +246,9 @@ Higher = better qualitative business. Used by Ray as one input into conviction.
 {
   "completeness_pct": 95.0,
   "warnings": [],
-  "data_sources_succeeded": ["info", "financials", "balance_sheet", "cashflow", "history_1y", "peers", "vix", "dxy", "sector_etf"],
+  "data_sources_succeeded": ["info", "financials", "balance_sheet", "cashflow", "history_1y", "news", "peers", "vix", "dxy", "sector_etf"],
   "data_sources_failed": [],
-  "synthesis_model": "claude-sonnet-4-5-20250929"
+  "synthesis_model": "claude-sonnet-4-6"
 }
 ```
 
@@ -230,9 +256,44 @@ Higher = better qualitative business. Used by Ray as one input into conviction.
 
 ---
 
+---
+
+## FactPack — deterministic layer output
+
+The `facts` subcommand returns a `FactPack` instead of a full `CharlieReport`. It contains all deterministic facts and is the input to the synthesis layer. Key fields beyond what's in `CharlieReport`:
+
+```json
+{
+  "ticker": "AAPL",
+  "company_name": "Apple Inc.",
+  "business_summary": "Apple Inc. designs, manufactures...",
+  "rsi_14d": 62.4,
+  "rsi_signal": "neutral",
+  "price_return_1m_pct": 3.2,
+  "price_return_3m_pct": -1.8,
+  "recent_news": [
+    "Apple reports record Q1 earnings",
+    "Apple Vision Pro sales disappoint analysts"
+  ],
+  "vix_level": 18.2,
+  "dollar_index_3m_change_pct": 1.4,
+  "moat_proxies": { ... },
+  "peer_comparison": { ... }
+}
+```
+
+**Technical context fields:**
+- `rsi_14d` — Wilder's RSI(14) computed from 1y daily price history; `null` if history unavailable
+- `rsi_signal` — `"overbought"` (RSI > 70) / `"neutral"` / `"oversold"` (RSI < 30)
+- `price_return_1m_pct` — 1-month (~21 sessions) price return in percent
+- `price_return_3m_pct` — 3-month (~63 sessions) price return in percent
+- `recent_news` — up to 5 headlines from yfinance's news feed
+
+---
+
 ## Field nullability
 
-Every block in the report can be `null` if the underlying data isn't available. Ray must handle missing blocks gracefully:
+Every block in the report can be `null` if the underlying data isn't available. Check `data_quality.warnings` for the cause.
 
 - `product_analysis`, `customer_analysis`, `supplier_analysis`, `macro_environment` → present only when synthesis succeeded.
 - `sector_outlook`, `peer_comparison`, `moat` (with proxies) → present whenever the deterministic data path succeeds, even if synthesis fails.
@@ -243,5 +304,3 @@ Every block in the report can be `null` if the underlying data isn't available. 
 ## Versioning
 
 This is **v1.0.0**. Backward-incompatible changes (renaming fields, changing types) require bumping the major version. Adding new optional fields can happen at minor version bumps.
-
-Ray should validate `schema_version` and refuse to run on incompatible versions.

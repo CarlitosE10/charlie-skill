@@ -1,14 +1,14 @@
 # Sector Geopolitical Risk Map
 
-Charlie maintains a curated set of always-on geopolitical risk events in `scripts/sector_outlook.py` (the `GEOPOLITICAL_RISK_MAP`). This document explains the reasoning behind each event, the affected sectors and tickers, and how Charlie uses them.
+A curated set of always-on geopolitical risk events lives in `scripts/analysis.py` (the `_GEO_RISKS` dict). This document explains the reasoning behind each event, the affected sectors and tickers, and how they are used.
 
-The map is **always-on** — Charlie does not depend on news feeds. The events listed are structural, multi-year exposures that should always be flagged when they apply, not "breaking news" alerts. (Breaking news belongs in the Snowball sentiment block, not Charlie.)
+The map is **always-on** — it does not depend on news feeds. The events listed are structural, multi-year exposures that should always be flagged when they apply, not "breaking news" alerts.
 
 ---
 
 ## How the map is used
 
-When Charlie runs `sector` or `analyze`, it iterates over every event in the map. An event is flagged for a ticker if **either**:
+When `sector` or `analyze` runs, it iterates over every event in the map. An event is flagged for a ticker if **either**:
 
 1. The ticker is explicitly named in the event's `tickers` list (high specificity), OR
 2. The company's yfinance sector matches the event's `sectors` list (broader exposure).
@@ -68,14 +68,10 @@ This map should be reviewed and updated periodically — at minimum once a year,
 1. **Add events that are structural, not breaking.** A single news item is not enough.
 2. **Be conservative on severity.** Default to `neutral` or `weak`. Reserve `strong` for events where the dependency is acknowledged in 10-K risk factors of multiple affected companies.
 3. **Specify tickers AND sectors.** Tickers catch the most-exposed names; sectors catch the rest.
-4. **Document the *impact*, not just the event.** "China–Taiwan tensions" is too vague; "semiconductor supply chain disruption from advanced-node concentration" is what Ray needs.
+4. **Document the *impact*, not just the event.** "China–Taiwan tensions" is too vague; "semiconductor supply chain disruption from advanced-node concentration" is what the report consumer needs.
 
 ---
 
-## Why this is in Charlie and not in Snowball
+## Structural exposure vs. real-time signals
 
-Snowball does **sentiment** (Fear & Greed, VIX, short interest) and **breaking news** if any. Those are real-time, market-driven signals.
-
-Charlie does **structural geopolitical exposure** — the always-on, multi-year risks that don't change day-to-day but should always be acknowledged in a qualitative report. Different layer, different cadence, different user.
-
-Ray then weighs both inputs.
+This map covers **structural geopolitical exposure** — the always-on, multi-year risks that don't change day-to-day but should always be acknowledged in a qualitative report. This is distinct from real-time market sentiment signals (VIX, short interest, breaking news), which operate at a different cadence and belong in a separate layer.
